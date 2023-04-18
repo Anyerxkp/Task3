@@ -1,5 +1,6 @@
-const redis = require('redis');
-const cache = require('express-redis-cache')();
+//const redis = require('redis');
+//const cache = require('express-redis-cache')();
+
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -23,17 +24,16 @@ const todoSchema = new mongoose.Schema({
   completed: Boolean
 });
 
+// const redisClient = redis.createClient({
+//   host: '127.0.0.1',
+//   port: 6379
+// });
+
+// redisClient.on('error', (err) => {
+//   console.log('Redis error:', err);
+// });
+
 const Todo = mongoose.model('Todo', todoSchema);
-
-const redisClient = redis.createClient({
-  host: '127.0.0.1',
-  port: 6379
-});
-
-redisClient.on('error', (err) => {
-  console.log('Redis error:', err);
-});
-
 
 //Create a User schema and model:
 const userSchema = new mongoose.Schema({
@@ -110,7 +110,8 @@ const authMiddleware = (requiredRole) => (req, res, next) => {
 
 
 // GET all todos
-app.get('/todos', authMiddleware(), cache.route(), async (req, res) => {
+// app.get('/todos', authMiddleware(), cache.route(), async (req, res)
+app.get('/todos', authMiddleware(), async (req, res) => {
   try {
     const todos = await Todo.find();
     res.json(todos);
